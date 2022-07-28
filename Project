@@ -1,0 +1,179 @@
+LAB
+---
+
+-------
+GIT --> 
+-------
+
+mkdir /devops-project
+  cd /devops-project/
+  pwd
+  git init
+  git config user.name iwayqdev1
+  git config user.email iwayqdev1
+  cp -R /home/ec2-user/java-source/* .
+  ls -l
+  git status
+  git add .
+  git status
+  git commit -m "code is updated"
+  git status
+  git log
+  vi README.md
+     #modified it and save & close  
+  git status
+  git add .
+  git commit -m "README file updated"
+  git log
+  vi README.md
+     #edit again add one more line , Save & exit
+  git status
+  git add .
+  git commit -m "README file again modified"
+  git log
+     #take one commit ID 
+  git reset 24e34xxxxxxxx
+  git log
+  
+  
+-----------------------  
+VCS--> GITHUB/BITBUCKET
+-----------------------
+
+  git clone https://
+  ls -l
+  cd devops-project/
+     ls -la
+	 git config user.name iwayqdev1
+	 git config user.email iwayqdev1
+	 git remote -v
+	 ls -la
+	 cp -pr /home/ec2-user/java-source/* .
+	 ls -la
+	 git status
+	 git add .
+	 git status
+	 git commit -m "devops project code updated"
+	 git push origin master
+	 
+DEV_2
+-----
+
+  git clone https
+  cd devops-project/
+     ls -la
+	 
+	 
+	 
+	 
+---------	 
+MAVEN -->
+---------
+
+
+
+
+
+--------------
+POSTGRESQL -->
+--------------
+
+t2.medium Server
+----------------
+
+port open
+---------
+SSH
+POSTGRESQL
+TCP-9000 SonarQube Port
+HTTP
+
+amazon-linux-extras list
+amazon-linux-extras install postgresql112
+yum install postgresql-server postgresql-devel postgresql -y
+/usr/bin/postgresql-setup --initdb
+systemctl start postgresql
+systemctl status postgresql
+tail -1 /etc/passwd
+su - postgres
+     -bash-4.2$ psql
+     postgres=# CREATE USER sonar WITH PASSWORD 'sonar';
+	 postgres=# ALTER USER sonar WITH SUPERUSER
+	 postgres=# \du
+	 postgres=# \?
+vi /var/lib/pgsql/data/pg_hba.conf
+su - postgres
+     postgres=# CREATE DATABASE sonar;
+     postgres=# \1
+     postgres=# GRANT ALL PRIVILEGES ON DATABASE sonar TO sonar;
+	 
+-------------
+SONARQUBE -->
+-------------
+
+cd /opt
+     wget https://sonarqube
+	 ls -l sonarqube-8.4.1.35646.zip
+	 unzip sonarqube-8.4.1.35646.zip
+	 ls -l
+	 cd sonarqube-8.4.1.35646
+	    ls -l
+		amazon-linux-extras list
+		amazon-linux-extras install java-openjdk11
+		java -version
+		ls -l
+		adduser sonar
+		chown -R sonar:sonar /opt/sonarqube-8
+		cd /opt/sonarqube-8
+		  cd conf
+		  ls -l
+		  vi sonar.properties
+		       sonar.jdbc.username=sonar
+			   sonar.jdbc.password=sonar
+			   sonar.jdbc.url=jdbc:postgresql://localhost/sonar
+			   sonar.path.data=/var/sonarqube/data
+			   sonar.path.temp=/var/sonarqube/temp
+#back to root user
+     vi /etc/sysctl.conf
+	     vm.max_map_count=524288
+		 fs.file-max=131072
+	 sysctl -p
+	 vi /etc/security/limits.conf
+	     sonar hard nofile 65535
+		 sonar soft nofile 65535
+	 su - sonar
+	     cd /opt/sonarqube-8
+		     cd bin/linux-x86-64/
+			     ls -l
+                 ./sonar.sh start
+                 ./sonar.sh status
+                 cd ../../
+             cd logs
+             pwd
+			 ls -l
+			 cat sonar.log
+#back root user
+     mkdir /var/sonarqube
+     chown -r sonar:sonar /var/sonarqube
+     su - sonar
+         cd /opt/sonarqube-8
+		     cd bin/linux-x86-64/	 
+			     ./sonar.sh start
+                 ./sonar.sh status
+                 cd ../../
+             cd logs
+             pwd
+			 ls -l
+			 cat sonar.log
+#as a root user			 
+	 ps -ef | grep -i sonar
+	 su - sonar
+		 cd /opt/sonarqube-8
+		     cd bin/linux-x86-64/	 
+                 ./sonar.sh status 
+				 
+# use IP:9000 and sonarqube is working and login into
+     cd devops-project/
+         ls -l
+         mvn clean verify sonar:sonar -Dsonar.projectKey=GitSonarQubeproj -Dsonar.host.url=http://54.91.173.76:9000 -Dsonar.login=0aa6f57230f2266cecd6037d30b6e918406cd1c5
+         		 
